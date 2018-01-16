@@ -21,7 +21,7 @@ class Model {
             this.initialize();
         }
     }
-    config(connectionParameters, modelConf) {
+    static config(connectionParameters, modelConf) {
         Model.connectionParameters = connectionParameters;
         Model.modelConf = modelConf;
     }

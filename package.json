@@ -1,6 +1,6 @@
 {
   "name": "syp-model",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple yet powerful promise-based database model for Node.js",
   "main": "model.js",
   "dependencies": {

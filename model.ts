@@ -21,7 +21,7 @@ export default class Model
 	private static connectionParameters = null
 	private static modelConf = null
 
-	static config(connectionParameters, modelConf) {
+	public static config(connectionParameters, modelConf) {
 		Model.connectionParameters = connectionParameters
 		Model.modelConf = modelConf;
 	}

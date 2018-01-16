@@ -5,6 +5,7 @@ Simple yet powerful promise-based database model for Node.js
 
 Author: Tuhin Paul
 :phone: [Mobile](tel:+1(306)880-5494) :email: [Email](mailto:tuhin.paul@usask.ca)
+
 January 16, 2018
 
 ***
@@ -14,6 +15,9 @@ Before using the model, you need to provide following configurations using the s
 * connection parameters
 * model configurations
 
+Currently, the model works for mysql. Support for other database systems will be added soon.
+
+
 Example of using static Model::config(connectionParameters, modelConf):
 
 ```javascript
@@ -22,12 +26,12 @@ Example of using static Model::config(connectionParameters, modelConf):
     Database connection parameters are to be provided inside connectionParameters */
 let dbConnConf = {
 	"connectionParameters": {
-		"host"               : "localhost",
-		"user"               : "root",
-		"password"           : "roott",
-		"database"           : "restaurant",
+		"host"               : "<mysql host>",
+		"user"               : "<mysql username>",
+		"password"           : "<mysql password>",
+		"database"           : "<database name>",
 		"multipleStatements" : true,
-		"pool"               : { "maxConnections": 50, "maxIdleTime": 30}
+		"pool"               : { "maxConnections": 20, "maxIdleTime": 30}
 	}
 }
 

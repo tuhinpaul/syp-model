@@ -4,8 +4,7 @@
   "description": "Simple yet powerful promise-based database model for Node.js",
   "main": "model.js",
   "dependencies": {
-    "mysql": "^2.15.0",
-    "typescript": "^2.4.2"
+    "mysql": "^2.15.0"
   },
   "scripts": {
     "build": "tsc",

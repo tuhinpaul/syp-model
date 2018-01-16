@@ -21,18 +21,14 @@ Currently, the model works for mysql. Support for other database systems will be
 Example of using static Model::config(connectionParameters, modelConf):
 
 ```javascript
-/** the configuration should have an object
-    named connectionParameters as follows.
-    Database connection parameters are to be provided inside connectionParameters */
+/* provide database connection configuration as follows: */
 let dbConnConf = {
-	"connectionParameters": {
-		"host"               : "<mysql host>",
-		"user"               : "<mysql username>",
-		"password"           : "<mysql password>",
-		"database"           : "<database name>",
-		"multipleStatements" : true,
-		"pool"               : { "maxConnections": 20, "maxIdleTime": 30}
-	}
+	"host"               : "<mysql host>",
+	"user"               : "<mysql username>",
+	"password"           : "<mysql password>",
+	"database"           : "<database name>",
+	"multipleStatements" : true,
+	"pool"               : { "maxConnections": 20, "maxIdleTime": 30}
 }
 
 /** you provide the information of the models and corresponding

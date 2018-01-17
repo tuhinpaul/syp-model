@@ -1,7 +1,10 @@
 export default class MyLogger
 {
-	constructor() {
+	/* you may enable/disable logging */
+	isEnabled = null;
 
+	constructor(enabled = true) {
+		this.isEnabled = enabled;
 	}
 
 	private newline() {
@@ -9,6 +12,9 @@ export default class MyLogger
 	}
 
 	log(x?) : void {
+		if (! this.isEnabled)
+			return
+
 		// If no argument is provided
 		if ( typeof(x) == 'undefined' )
 			return console.log()
@@ -18,6 +24,9 @@ export default class MyLogger
 
 	// adds an extra newline
 	logln(x?) : void {
+		if (! this.isEnabled)
+			return
+
 		this.log(x)
 		this.newline();
 	}

@@ -1,11 +1,8 @@
 import * as mysql from 'mysql'
 
 import MyLogger from './myutil/mylogger'
-let logger = new MyLogger();
+let logger = new MyLogger(false);
 
-// const modelConf = require('../../conf/model')
-
-// const dbConf = require('../../conf/db.json') // TODO: include (automatically) conf dir in build dir
 
 export default class Model
 {
@@ -18,11 +15,11 @@ export default class Model
 	private likeArr = {} // values are wildcards indicating wether/not wildcards should be applied to the corresponding value in whereArr.
 	private orderBy:string[] = []
 
-	private static connectionParameters = null
+	private static connConf  = null
 	private static modelConf = null
 
-	public static config(connectionParameters, modelConf) {
-		Model.connectionParameters = connectionParameters
+	public static config(connConf, modelConf) {
+		Model.connConf = connConf
 		Model.modelConf = modelConf;
 	}
 
@@ -41,11 +38,16 @@ export default class Model
 
 	private initialize() {
 
-		if (! Model.connectionParameters)
-			throw "DB Connection parameters are not set."
+		/* Make sure that model configuration exists */
+		// if Model.config() was not called OR was not provided model conf:
+		if(! Model.modelConf) {
 
-		if(! Model.modelConf)
-			throw "Model configurations are not provided."
+			// if process environment contains a model file, use that
+			if (process.env.hasOwnProperty('sypmodel-model-conf-file'))
+				Model.modelConf = require( process.env['sypmodel-model-conf-file'] )
+			else
+				throw "Model configurations are not provided."
+		}
 
 		if (! Model.modelConf.hasOwnProperty(this.className))
 			throw "Unknown model!"
@@ -66,6 +68,10 @@ export default class Model
 		return m
 	}
 
+	static emptyModel(): Model {
+		return new Model()
+	}
+
 
 	assign(property: string, value) {
 		if (this.fields.indexOf(property) > -1)
@@ -74,8 +80,26 @@ export default class Model
 			throw "Property " + property + " does not exist!"
 	}
 
+	valueOf(property: string): any {
+		if (this.fields.indexOf(property) > -1)
+			return this.fValues[property]
+		else
+			throw "Property " + property + " does not exist!"
+	}
+
 	execute(stmt: String, params: any|any[]): Promise<(resolve, reject)=>{}>
 	{
+		/* Make sure that database connection configuration exists */
+		// if Model.config() was not called OR was not provided database connection conf:
+		if(! Model.connConf) {
+
+			// if process environment contains a model file, use that
+			if (process.env.hasOwnProperty('sypmodel-conn-conf-file'))
+				Model.connConf = require( process.env['sypmodel-conn-conf-file'] )
+			else
+				throw "Database connection configurations are not provided."
+		}
+
 		logger.log('Statement executed:')
 		logger.logln(stmt)
 		logger.log('Parameters:')
@@ -83,7 +107,7 @@ export default class Model
 
 		return new Promise((resolve, reject) =>
 		{
-			let conn = mysql.createConnection(Model.connectionParameters);
+			let conn = mysql.createConnection(Model.connConf);
 
 			conn.connect();
 

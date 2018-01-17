@@ -2,9 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mysql = require("mysql");
 const mylogger_1 = require("./myutil/mylogger");
-let logger = new mylogger_1.default(true);
-// const modelConf = require('../../conf/model')
-// const dbConf = require('../../conf/db.json') // TODO: include (automatically) conf dir in build dir
+let logger = new mylogger_1.default(false);
 class Model {
     constructor() {
         this.fValues = {};

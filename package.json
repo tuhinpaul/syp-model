@@ -1,10 +1,9 @@
 {
   "name": "syp-model",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Simple yet powerful promise-based database model for Node.js",
   "main": "model.js",
   "dependencies": {
-    "@types/node": "^9.3.0",
     "mysql": "^2.15.0"
   },
   "scripts": {
@@ -27,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/tuhinpaul/syp-model/issues"
   },
-  "homepage": "https://github.com/tuhinpaul/syp-model#readme"
+  "homepage": "https://github.com/tuhinpaul/syp-model#readme",
+  "devDependencies": {
+    "@types/node": "^9.3.0"
+  }
 }

@@ -73,7 +73,7 @@ export default class Model
 	}
 
 
-	assign(property: string, value) {
+	assign(property: string, value: any): void {
 		if (this.fields.indexOf(property) > -1)
 			this.fValues[property] = value;
 		else
@@ -217,7 +217,7 @@ export default class Model
 		.catch( err => Promise.reject(err) );
 	}
 
-	where(wObj) : Model
+	where(wObj: any) : Model
 	{
 		Object.assign(this.whereArr, wObj)
 		return this
@@ -324,7 +324,7 @@ export default class Model
 		});
 	}
 
-	public static promiseAddAll(oInstance: Model, indexBy: string = 'id', isArrayMember: boolean = false) {
+	public static promiseAddAll(oInstance: Model, indexBy: string = 'id', isArrayMember: boolean = false): ((pool: any) => Promise<any>) {
 		return function(pool:any) {
 			return new Promise ( (resolve, reject) => {
 				oInstance.select()

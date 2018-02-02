@@ -165,8 +165,23 @@ class Model {
         this.likeArr = likeArr;
         return this;
     }
+    // order results
     order(ordering) {
-        this.orderBy.push(ordering);
+        if (this.isString(ordering)) {
+            this.orderBy.push(ordering);
+        }
+        else if (this.isArray(ordering)) {
+            ordering.forEach(o => {
+                this.orderBy.push(o);
+            });
+        }
+        else if (this.isObject(ordering)) {
+            let x = ordering;
+            for (let p in x) {
+                if (x.hasOwnProperty(p))
+                    this.orderBy.push(p + ' ' + x[p]);
+            }
+        }
         return this;
     }
     select() {
@@ -313,6 +328,23 @@ class Model {
             });
         };
     }
+    // checking datatypes:
+    //   isString (value)
+    //   isArray  (value)
+    //   isObject (value)
+    // check more: https://www.webbjocke.com/javascript-check-data-types/
+    isString(value) {
+        return typeof value === 'string' || value instanceof String;
+    }
+    ;
+    isArray(value) {
+        return value && typeof value === 'object' && value.constructor === Array;
+    }
+    ;
+    isObject(value) {
+        return value && typeof value === 'object' && value.constructor === Object;
+    }
+    ;
 }
 Model.connConf = null;
 Model.modelConf = null;

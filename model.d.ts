@@ -44,7 +44,7 @@ export default class Model
 
 	setLikeArray: (likeArr) => Model
 
-	order: (ordering) => Model
+	order: (ordering: string | string[] | Object) => Model
 
 	select: () => Promise<(resolve, reject)=>{}>
 

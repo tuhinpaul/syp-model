@@ -229,9 +229,25 @@ export default class Model
 		return this
 	}
 
-	order(ordering) : Model
+	// order results
+	order(ordering: string | string[] | Object) : Model
 	{
-		this.orderBy.push(ordering)
+		if ( this.isString(ordering) ) {
+			this.orderBy.push(ordering as string)
+		}
+		else if ( this.isArray(ordering) ) {
+			(ordering as string[]).forEach(o => {
+				this.orderBy.push(o as string)
+			});			
+		}
+		else if ( this.isObject(ordering) ) {
+			let x = ordering as Object;
+			for(let p in x) {
+				if ( x.hasOwnProperty(p) )
+					this.orderBy.push( p + ' ' + x[p] )
+			}
+		}
+
 		return this
 	}
 
@@ -408,4 +424,22 @@ export default class Model
 			});
 		}
 	}
+
+
+	// checking datatypes:
+	//   isString (value)
+	//   isArray  (value)
+	//   isObject (value)
+	// check more: https://www.webbjocke.com/javascript-check-data-types/
+	private isString (value) {
+		return typeof value === 'string' || value instanceof String;
+	};
+
+	private isArray (value) {
+		return value && typeof value === 'object' && value.constructor === Array;
+	};
+
+	private isObject (value) {
+		return value && typeof value === 'object' && value.constructor === Object;
+	};
 }

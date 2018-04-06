@@ -1,7 +1,7 @@
 import * as mysql from 'mysql'
 
 import MyLogger from './myutil/mylogger'
-let logger = new MyLogger(false);
+let logger = new MyLogger(true);
 
 
 export default class Model
@@ -87,7 +87,7 @@ export default class Model
 			throw "Property " + property + " does not exist!"
 	}
 
-	execute(stmt: String, params: any|any[]): Promise<(resolve, reject)=>{}>
+	static execute(stmt: String, params: any|any[]): Promise<(resolve, reject)=>{}>
 	{
 		/* Make sure that database connection configuration exists */
 		// if Model.config() was not called OR was not provided database connection conf:
@@ -145,7 +145,7 @@ export default class Model
 
 		var stmt = ['insert into', this.tablename, 'set ?'].join(' ');
 
-		return this.execute(stmt, vals);
+		return Model.execute(stmt, vals);
 	}
 
     update() : Promise<(resolve, reject)=>{}>
@@ -167,14 +167,14 @@ export default class Model
 			throw 'no value was assigned to any column';
 
 		var stmt = ['update', this.tablename, 'set ? where id = ?'].join(' ');
-		return this.execute(stmt, [vals, this.fValues['id']]);
+		return Model.execute(stmt, [vals, this.fValues['id']]);
 	}
 
 
 	deleteById() : Promise<(resolve, reject)=>{}>
 	{
 		var stmt = ['delete from', this.tablename, 'where id = ?'].join(' ');
-		return this.execute(stmt, this.fValues['id']);
+		return Model.execute(stmt, this.fValues['id']);
 	}
 
 	deleteManyById(ids: number[]) : Promise<(resolve, reject)=>{}>
@@ -189,7 +189,7 @@ export default class Model
 			let placeholderPart = "(" + placeholders.join(', ') + ")"
 
 			var stmt = ['delete from', this.tablename, 'where id in', placeholderPart].join(' ');
-			return this.execute(stmt, ids);
+			return Model.execute(stmt, ids);
 		}
 		else
 			return new Promise ( (resolve, reject) => {
@@ -200,14 +200,14 @@ export default class Model
 	deleteByField(fieldName: string) : Promise<(resolve, reject)=>{}>
 	{
 		var stmt = ['delete from', this.tablename, 'where', fieldName, '= ?'].join(' ');
-		return this.execute(stmt, this.fValues[fieldName]);
+		return Model.execute(stmt, this.fValues[fieldName]);
 	}
 
 	selectById() : Promise<(resolve, reject)=>{}>
 	{
 		var stmt = ['select * from', this.tablename, 'where id = ?'].join(' ');
 		stmt = this.addOrderCmd(stmt)
-		return this.execute(stmt, this.fValues['id']).then( result => {
+		return Model.execute(stmt, this.fValues['id']).then( result => {
 			if (result instanceof Array && result.length == 1) {
 				return Promise.resolve(result[0])
 			}
@@ -301,7 +301,7 @@ export default class Model
 			stmt = stmt + ' where ' + wclause.join(' and ');
 
 		stmt = this.addOrderCmd(stmt)
-		return this.execute(stmt, wValues);
+		return Model.execute(stmt, wValues);
 	}
 
 	addOrderCmd(stmt) {
@@ -310,6 +310,37 @@ export default class Model
 		return stmt;
 	}
 
+
+	/**
+	 * Insert more than one record
+	 * valueArr: should be a 2D array of values for the columns
+	 */
+	public static insertMany(modelName, columns, valueArr) {
+
+		console.log("valueArr in insertMany(): ")
+		console.log(valueArr)
+
+		let tablename = Model.modelConf[modelName]['tablename'];
+		let colStr = "(`" + columns.join("`, `") + "`)";
+
+		let phArr = []
+		let flatVals = []
+		let numRows = valueArr.length;
+		for (let i=0; i<numRows; i++) {
+			let ph = Array(valueArr[i].length).fill('?')
+			phArr.push('(' + ph.join(',') + ')');
+			flatVals = flatVals.concat(valueArr[i]);
+		}
+
+		let stmt = "insert into " + tablename + colStr + " values " + phArr.join(",");
+		console.log("stmt:")
+		console.log(stmt);
+
+		console.log("flatvalues:")
+		console.log(flatVals)
+
+		return Model.execute(stmt, flatVals);
+	}
 
 	// Promise to GET all objects from DB table
 	public static promiseGetOne(oInstance: Model, keyName: string) {

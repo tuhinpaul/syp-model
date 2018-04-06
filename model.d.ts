@@ -50,7 +50,15 @@ export default class Model
 
 	addOrderCmd: (stmt: string) => string
 
-	// Promise to GET all objects from DB table
+	/**
+	 * Insert more than one record
+	 * valueArr: should be a 2D array of values for the columns
+	 */
+	static insertMany: (modelName, columns, valueArr) => Promise<any>
+
+	/**
+	 * Promise to GET all objects from DB table
+	 */
 	static promiseGetOne: (oInstance: Model, keyName: string) => Promise<any>
 
 	// Promise to GET all objects from DB table

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mysql = require("mysql");
 const mylogger_1 = require("./myutil/mylogger");
-let logger = new mylogger_1.default(false);
+let logger = new mylogger_1.default(true);
 class Model {
     constructor() {
         this.fValues = {};
@@ -61,7 +61,7 @@ class Model {
         else
             throw "Property " + property + " does not exist!";
     }
-    execute(stmt, params) {
+    static execute(stmt, params) {
         /* Make sure that database connection configuration exists */
         // if Model.config() was not called OR was not provided database connection conf:
         if (!Model.connConf) {
@@ -104,7 +104,7 @@ class Model {
         if (cols.length === 0)
             throw 'no value was assigned to any column';
         var stmt = ['insert into', this.tablename, 'set ?'].join(' ');
-        return this.execute(stmt, vals);
+        return Model.execute(stmt, vals);
     }
     update() {
         var cols = [];
@@ -120,11 +120,11 @@ class Model {
         if (cols.length === 0)
             throw 'no value was assigned to any column';
         var stmt = ['update', this.tablename, 'set ? where id = ?'].join(' ');
-        return this.execute(stmt, [vals, this.fValues['id']]);
+        return Model.execute(stmt, [vals, this.fValues['id']]);
     }
     deleteById() {
         var stmt = ['delete from', this.tablename, 'where id = ?'].join(' ');
-        return this.execute(stmt, this.fValues['id']);
+        return Model.execute(stmt, this.fValues['id']);
     }
     deleteManyById(ids) {
         if (ids.length > 0) {
@@ -134,7 +134,7 @@ class Model {
             });
             let placeholderPart = "(" + placeholders.join(', ') + ")";
             var stmt = ['delete from', this.tablename, 'where id in', placeholderPart].join(' ');
-            return this.execute(stmt, ids);
+            return Model.execute(stmt, ids);
         }
         else
             return new Promise((resolve, reject) => {
@@ -143,12 +143,12 @@ class Model {
     }
     deleteByField(fieldName) {
         var stmt = ['delete from', this.tablename, 'where', fieldName, '= ?'].join(' ');
-        return this.execute(stmt, this.fValues[fieldName]);
+        return Model.execute(stmt, this.fValues[fieldName]);
     }
     selectById() {
         var stmt = ['select * from', this.tablename, 'where id = ?'].join(' ');
         stmt = this.addOrderCmd(stmt);
-        return this.execute(stmt, this.fValues['id']).then(result => {
+        return Model.execute(stmt, this.fValues['id']).then(result => {
             if (result instanceof Array && result.length == 1) {
                 return Promise.resolve(result[0]);
             }
@@ -221,12 +221,36 @@ class Model {
         if (wclause.length > 0)
             stmt = stmt + ' where ' + wclause.join(' and ');
         stmt = this.addOrderCmd(stmt);
-        return this.execute(stmt, wValues);
+        return Model.execute(stmt, wValues);
     }
     addOrderCmd(stmt) {
         if (this.orderBy.length > 0)
             stmt = stmt + ' order by ' + this.orderBy.join(',');
         return stmt;
+    }
+    /**
+     * Insert more than one record
+     * valueArr: should be a 2D array of values for the columns
+     */
+    static insertMany(modelName, columns, valueArr) {
+        console.log("valueArr in insertMany(): ");
+        console.log(valueArr);
+        let tablename = Model.modelConf[modelName]['tablename'];
+        let colStr = "(`" + columns.join("`, `") + "`)";
+        let phArr = [];
+        let flatVals = [];
+        let numRows = valueArr.length;
+        for (let i = 0; i < numRows; i++) {
+            let ph = Array(valueArr[i].length).fill('?');
+            phArr.push('(' + ph.join(',') + ')');
+            flatVals = flatVals.concat(valueArr[i]);
+        }
+        let stmt = "insert into " + tablename + colStr + " values " + phArr.join(",");
+        console.log("stmt:");
+        console.log(stmt);
+        console.log("flatvalues:");
+        console.log(flatVals);
+        return Model.execute(stmt, flatVals);
     }
     // Promise to GET all objects from DB table
     static promiseGetOne(oInstance, keyName) {

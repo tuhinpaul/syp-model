@@ -199,6 +199,20 @@ class Model {
                 else
                     wValues.push(this.whereArr[f]);
             }
+            else if (this.whereArr[f].hasOwnProperty("in")) {
+                // in clause
+                // check if array was provided as the value:
+                if (this.whereArr[f]["in"].constructor != Array) {
+                    let error = "wrong value for in clause";
+                    return Promise.reject(error);
+                }
+                if (this.whereArr[f]["in"].length > 0) {
+                    let placeholders = Array(this.whereArr[f]["in"].length).fill('?');
+                    wclause.push(f + " in (" + placeholders + ")");
+                    for (let key in this.whereArr[f]["in"])
+                        wValues.push(this.whereArr[f]["in"][key]);
+                }
+            }
             else {
                 wclause.push(f + " = ?");
                 wValues.push(this.whereArr[f]);

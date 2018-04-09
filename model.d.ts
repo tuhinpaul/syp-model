@@ -26,7 +26,7 @@ export default class Model
 
 	valueOf: (property: string) => any
 
-	execute: (stmt: String, params: any|any[]) => Promise<(resolve, reject)=>{}>
+	static execute: (stmt: String, params: any|any[]) => Promise<(resolve, reject)=>{}>
 
     create: () => Promise<(resolve, reject)=>{}>
 

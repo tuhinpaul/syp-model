@@ -271,7 +271,7 @@ export default class Model
 					wValues.push( this.whereArr[f]);
 			}
 			
-			else if(this.whereArr[f].hasOwnProperty("in")) {
+			else if(this.whereArr[f] && this.whereArr[f].hasOwnProperty("in")) {
 				// in clause
 
 				// check if array was provided as the value:

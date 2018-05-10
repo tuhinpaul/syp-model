@@ -22,7 +22,7 @@ export default class Model
 
 	static emptyModel: () => Model
 
-	assign: (property: string, value: any) => void
+	assign: (property: string, value: any) => Model
 
 	valueOf: (property: string) => any
 

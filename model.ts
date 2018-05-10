@@ -50,7 +50,7 @@ export default class Model
 		}
 
 		if (! Model.modelConf.hasOwnProperty(this.className))
-			throw "Unknown model!"
+			throw "Unknown model " + this.className + "!"
 		
 		this.tablename = Model.modelConf[this.className]['tablename']
 		this.fields = Model.modelConf[this.className]['columns']
@@ -73,11 +73,15 @@ export default class Model
 	}
 
 
-	assign(property: string, value: any): void {
+	assign(property: string, value: any): Model {
 		if (this.fields.indexOf(property) > -1)
 			this.fValues[property] = value;
 		else
 			throw "Property " + property + " does not exist!"
+		
+		// allow coalescing
+
+		return this;
 	}
 
 	valueOf(property: string): any {

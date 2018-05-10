@@ -34,7 +34,7 @@ class Model {
                 throw "Model configurations are not provided.";
         }
         if (!Model.modelConf.hasOwnProperty(this.className))
-            throw "Unknown model!";
+            throw "Unknown model " + this.className + "!";
         this.tablename = Model.modelConf[this.className]['tablename'];
         this.fields = Model.modelConf[this.className]['columns'];
         this.fValues = {};
@@ -54,6 +54,8 @@ class Model {
             this.fValues[property] = value;
         else
             throw "Property " + property + " does not exist!";
+        // allow coalescing
+        return this;
     }
     valueOf(property) {
         if (this.fields.indexOf(property) > -1)

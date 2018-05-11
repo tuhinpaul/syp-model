@@ -57,6 +57,18 @@ class Model {
         // allow coalescing
         return this;
     }
+    assignAll(properties) {
+        for (let p in properties) {
+            if (!properties.hasOwnProperty(p))
+                continue;
+            if (this.fields.indexOf(p) > -1)
+                this.fValues[p] = properties[p];
+            else
+                throw "Property " + p + " does not exist!";
+        }
+        // allow coalescing
+        return this;
+    }
     valueOf(property) {
         if (this.fields.indexOf(property) > -1)
             return this.fValues[property];

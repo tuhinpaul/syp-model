@@ -24,6 +24,8 @@ export default class Model
 
 	assign: (property: string, value: any) => Model
 
+	assignAll(properties: Object): Model
+
 	valueOf: (property: string) => any
 
 	static execute: (stmt: String, params: any|any[]) => Promise<(resolve, reject)=>{}>

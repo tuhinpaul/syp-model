@@ -324,7 +324,22 @@ class Model {
             });
         });
     }
-    static promiseAddAll(oInstance, indexBy = 'id', isArrayMember = false) {
+    /**
+     * Promise to add all objects from DB table
+     *
+     *
+     * @param modelNameOrInstance can be either a model name or model instance. If it's a model name, an instance is created using Model.factory()
+     * @param indexBy how to index the objects in the returned list of objects
+     * @param isArrayMember is an index can be associated with multiple objects
+     *
+     * @returns a function, which takes an object argument and returns a promise. The promise resolves to the argument object with records added to it.
+     */
+    static promiseAddAll(modelNameOrInstance, indexBy = 'id', isArrayMember = false) {
+        let oInstance;
+        if (modelNameOrInstance.constructor === String)
+            oInstance = Model.factory(modelNameOrInstance);
+        else
+            oInstance = modelNameOrInstance;
         return function (pool) {
             return new Promise((resolve, reject) => {
                 oInstance.select()

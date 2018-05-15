@@ -47,7 +47,17 @@ declare module 'model' {
 	     * @param isArrayMember is an index can be associated with multiple objects
 	     */
 	    static promiseGetAll(modelNameOrInstance: String | Model, indexBy?: string, isArrayMember?: boolean): Promise<{}>;
-	    static promiseAddAll(oInstance: Model, indexBy?: string, isArrayMember?: boolean): ((pool: any) => Promise<any>);
+	    /**
+	     * Promise to add all objects from DB table
+	     *
+	     *
+	     * @param modelNameOrInstance can be either a model name or model instance. If it's a model name, an instance is created using Model.factory()
+	     * @param indexBy how to index the objects in the returned list of objects
+	     * @param isArrayMember is an index can be associated with multiple objects
+	     *
+	     * @returns a function, which takes an object argument and returns a promise. The promise resolves to the argument object with records added to it.
+	     */
+	    static promiseAddAll(modelNameOrInstance: String | Model, indexBy?: string, isArrayMember?: boolean): ((pool: any) => Promise<any>);
 	    static promiseAddById(oInstance: Model, id: number, keyName: string): (pool: any) => Promise<{}>;
 	    static promiseAddOne(oInstance: Model, keyName: string): (pool: any) => Promise<{}>;
 	    private isString(value);

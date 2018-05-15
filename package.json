@@ -5,10 +5,14 @@
   "main": "model.js",
   "types": "model.d.ts",
   "dependencies": {
-    "mysql": "^2.15.0"
+    "dts-generator": "^2.1.0",
+    "mysql": "^2.15.0",
+    "typescript": "^2.8.3"
   },
   "scripts": {
-    "build": "tsc",
+	"build": "tsc",
+	"gen-dts": "./node_modules/.bin/dts-generator --project . --exclude 'node_modules/**/*.d.ts' --exclude 'myutil/**.*' --out model.d.ts",
+	"copy": "cp *.{t,j}s ~/ght/ghtqc/node_modules/syp-model/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -210,7 +210,7 @@ class Model {
                 // apply wildcards
                 if (this.likeArr[f])
                     wValues.push('%' + this.whereArr[f] + '%');
-                else
+                else // NO wildcards
                     wValues.push(this.whereArr[f]);
             }
             else if (this.whereArr[f] && this.whereArr[f].hasOwnProperty("in")) {
@@ -273,7 +273,7 @@ class Model {
         return new Promise((resolve, reject) => {
             oInstance.select()
                 .then(result => {
-                if (result.length < 1)
+                if (result.length < 1) // TODO: why should there be many?
                     reject({ message: "Wrong number of " + oInstance.constructor.name + "!" });
                 else {
                     let obj = {};
@@ -379,7 +379,7 @@ class Model {
             return new Promise((resolve, reject) => {
                 oInstance.select()
                     .then(result => {
-                    if (result.length < 1)
+                    if (result.length < 1) // TODO: why should there be many?
                         pool[keyName] = null;
                     else
                         pool[keyName] = result[0];

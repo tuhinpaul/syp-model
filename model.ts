@@ -363,7 +363,9 @@ export default class Model
 		return Model.execute(stmt, flatVals);
 	}
 
-	// Promise to GET all objects from DB table
+	/**
+	 * Promise to GET the first matching object from DB table
+	 */
 	public static promiseGetOne(oInstance: Model, keyName: string) {
 		return new Promise ( (resolve, reject) => {
 			oInstance.select()
@@ -382,9 +384,23 @@ export default class Model
 		});
 	}
 
-	// Promise to GET all objects from DB table
-	// indexed by PK
-	public static promiseGetAll(oInstance: Model, indexBy: string = 'id', isArrayMember:boolean = false) {
+	/**
+	 * Promise to GET all objects from DB table
+	 * indexed by PK by defaule
+	 * 
+	 * @param modelNameOrInstance can be either a model name or model instance. If it's a model name, an instance is created using Model.factory()
+	 * @param indexBy how to index the objects in the returned list of objects
+	 * @param isArrayMember is an index can be associated with multiple objects
+	 */
+	public static promiseGetAll(modelNameOrInstance: String|Model, indexBy: string = 'id', isArrayMember:boolean = false) {
+
+		let oInstance: Model
+
+		if(modelNameOrInstance.constructor === String)
+			oInstance = Model.factory(modelNameOrInstance as string)
+		else
+			oInstance = modelNameOrInstance as Model;
+
 		return new Promise ( (resolve, reject) => {
 			oInstance.select()
 			.then( result => {

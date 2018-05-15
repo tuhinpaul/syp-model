@@ -63,9 +63,15 @@ export default class Model
 	 */
 	static promiseGetOne: (oInstance: Model, keyName: string) => Promise<any>
 
-	// Promise to GET all objects from DB table
-	// indexed by PK
-	static promiseGetAll: (oInstance: Model, indexBy?: string, isArrayMember?:boolean) => Promise<any>
+	/**
+	 * Promise to GET all objects from DB table
+	 * indexed by PK by defaule
+	 * 
+	 * @param modelNameOrInstance can be either a model name or model instance. If it's a model name, an instance is created using Model.factory()
+	 * @param indexBy how to index the objects in the returned list of objects
+	 * @param isArrayMember is an index can be associated with multiple objects
+	 */
+	static promiseGetAll(modelNameOrInstance: String|Model, indexBy, isArrayMember)
 
 	static promiseAddAll: (oInstance: Model, indexBy?: string, isArrayMember?: boolean) => ((pool: any) => Promise<any>)
 

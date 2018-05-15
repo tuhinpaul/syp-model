@@ -71,7 +71,7 @@ export default class Model
 	 * @param indexBy how to index the objects in the returned list of objects
 	 * @param isArrayMember is an index can be associated with multiple objects
 	 */
-	static promiseGetAll(modelNameOrInstance: String|Model, indexBy, isArrayMember)
+	static promiseGetAll(modelNameOrInstance: String|Model, indexBy? :string, isArrayMember?: boolean)
 
 	static promiseAddAll: (oInstance: Model, indexBy?: string, isArrayMember?: boolean) => ((pool: any) => Promise<any>)
 

@@ -218,12 +218,26 @@ export default class Model
 			});
 	}
 
+	/**
+	 * Deletes records based on the column name provided as argument.
+	 * 
+	 * @param fieldName the name of the column which is used in the where clause of delete query.
+	 * The table name and column value to use for deletion will be taken from the invoking object.
+	 * 
+	 * @return promise that resolves to the result of the delete query.
+	 */
 	deleteByField(fieldName: string) : Promise<(resolve, reject)=>{}>
 	{
 		var stmt = ['delete from', this.tablename, 'where', fieldName, '= ?'].join(' ');
 		return Model.execute(stmt, this.fValues[fieldName]);
 	}
 
+
+	/**
+	 * Returns the object that matches the ID of the invoking model
+	 * 
+	 * @return a promise that resolves to the the object which matches the id of the invoking model. If no record is found, the promise resolves to null. 
+	 */
 	selectById() : Promise<(resolve, reject)=>{}>
 	{
 		var stmt = ['select * from', this.tablename, 'where id = ?'].join(' ');
@@ -250,7 +264,16 @@ export default class Model
 		return this
 	}
 
-	// order results
+	/**
+	 * Sets ordering parameter
+	 * 
+	 * @param ordering: can be a string or an array of strings or an object. \
+	 * ordering can be a string such as 'order_no desc' OR
+	 * it can be a string array such as ['date desc', 'order_no asc'] OR
+	 * it can be an object such as {"date":  "desc", "order_no": "asc"}
+	 * 
+	 * @return the model itself
+	 */
 	order(ordering: string | string[] | Object) : Model
 	{
 		if ( this.isString(ordering) ) {
@@ -272,6 +295,12 @@ export default class Model
 		return this
 	}
 
+
+	/**
+	 * Finds records from the database
+	 * 
+	 * @return a promise that resolves to the returned records
+	 */
 	select() : Promise<(resolve, reject)=>{}>
 	{
 		// basic select all statement
@@ -478,7 +507,14 @@ export default class Model
 		}
 	}
 
-	public static promiseAddById(oInstance: Model, id:number, keyName: string) {
+	public static promiseAddById(modelNameOrInstance: String|Model, id:number, keyName: string) {
+		let oInstance: Model
+
+		if(modelNameOrInstance.constructor === String)
+			oInstance = Model.factory(modelNameOrInstance as string)
+		else
+			oInstance = modelNameOrInstance as Model;
+
 		return function(pool:any) {
 			return new Promise ( (resolve, reject) => {
 

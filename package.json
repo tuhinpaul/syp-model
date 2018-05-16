@@ -12,7 +12,6 @@
   "scripts": {
 	"build": "tsc",
 	"gen-dts": "./node_modules/.bin/dts-generator --project . --exclude 'node_modules/**/*.d.ts' --exclude 'myutil/**.*' --out model.d.ts",
-	"copy": "cp *.{t,j}s ~/ght/ghtqc/node_modules/syp-model/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

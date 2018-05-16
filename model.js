@@ -155,10 +155,23 @@ class Model {
                 resolve(null);
             });
     }
+    /**
+     * Deletes records based on the column name provided as argument.
+     *
+     * @param fieldName the name of the column which is used in the where clause of delete query.
+     * The table name and column value to use for deletion will be taken from the invoking object.
+     *
+     * @return promise that resolves to the result of the delete query.
+     */
     deleteByField(fieldName) {
         var stmt = ['delete from', this.tablename, 'where', fieldName, '= ?'].join(' ');
         return Model.execute(stmt, this.fValues[fieldName]);
     }
+    /**
+     * Returns the object that matches the ID of the invoking model
+     *
+     * @return a promise that resolves to the the object which matches the id of the invoking model. If no record is found, the promise resolves to null.
+     */
     selectById() {
         var stmt = ['select * from', this.tablename, 'where id = ?'].join(' ');
         stmt = this.addOrderCmd(stmt);
@@ -179,7 +192,16 @@ class Model {
         this.likeArr = likeArr;
         return this;
     }
-    // order results
+    /**
+     * Sets ordering parameter
+     *
+     * @param ordering: can be a string or an array of strings or an object. \
+     * ordering can be a string such as 'order_no desc' OR
+     * it can be a string array such as ['date desc', 'order_no asc'] OR
+     * it can be an object such as {"date":  "desc", "order_no": "asc"}
+     *
+     * @return the model itself
+     */
     order(ordering) {
         if (this.isString(ordering)) {
             this.orderBy.push(ordering);
@@ -198,6 +220,11 @@ class Model {
         }
         return this;
     }
+    /**
+     * Finds records from the database
+     *
+     * @return a promise that resolves to the returned records
+     */
     select() {
         // basic select all statement
         let stmt = ['select * from', this.tablename].join(' ');
@@ -365,7 +392,12 @@ class Model {
             });
         };
     }
-    static promiseAddById(oInstance, id, keyName) {
+    static promiseAddById(modelNameOrInstance, id, keyName) {
+        let oInstance;
+        if (modelNameOrInstance.constructor === String)
+            oInstance = Model.factory(modelNameOrInstance);
+        else
+            oInstance = modelNameOrInstance;
         return function (pool) {
             return new Promise((resolve, reject) => {
                 if (!id) {

@@ -17,11 +17,11 @@ declare module 'model' {
 	    assign(property: string, value: any): Model;
 	    assignAll(properties: Object): Model;
 	    valueOf(property: string): any;
-	    static execute(stmt: String, params: any | any[]): Promise<(resolve, reject) => {}>;
-	    create(): Promise<(resolve, reject) => {}>;
-	    update(): Promise<(resolve, reject) => {}>;
-	    deleteById(): Promise<(resolve, reject) => {}>;
-	    deleteManyById(ids: number[]): Promise<(resolve, reject) => {}>;
+	    static execute(stmt: String, params: any | any[]): Promise<any>;
+	    create(): Promise<any>;
+	    update(): Promise<any>;
+	    deleteById(): Promise<any>;
+	    deleteManyById(ids: number[]): Promise<any>;
 	    /**
 	     * Deletes records based on the column name provided as argument.
 	     *
@@ -30,13 +30,13 @@ declare module 'model' {
 	     *
 	     * @return promise that resolves to the result of the delete query.
 	     */
-	    deleteByField(fieldName: string): Promise<(resolve, reject) => {}>;
+	    deleteByField(fieldName: string): Promise<any>;
 	    /**
 	     * Returns the object that matches the ID of the invoking model
 	     *
 	     * @return a promise that resolves to the the object which matches the id of the invoking model. If no record is found, the promise resolves to null.
 	     */
-	    selectById(): Promise<(resolve, reject) => {}>;
+	    selectById(): Promise<any>;
 	    where(wObj: any): Model;
 	    setLikeArray(likeArr: any): Model;
 	    /**
@@ -55,13 +55,13 @@ declare module 'model' {
 	     *
 	     * @return a promise that resolves to the returned records
 	     */
-	    select(): Promise<(resolve, reject) => {}>;
+	    select(): Promise<any>;
 	    addOrderCmd(stmt: any): any;
 	    /**
 	     * Insert more than one record
 	     * valueArr: should be a 2D array of values for the columns
 	     */
-	    static insertMany(modelName: any, columns: any, valueArr: any): Promise<(resolve: any, reject: any) => {}>;
+	    static insertMany(modelName: any, columns: any, valueArr: any): Promise<any>;
 	    /**
 	     * Promise to GET the first matching object from DB table
 	     */

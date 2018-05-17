@@ -108,7 +108,7 @@ export default class Model
 			throw "Property " + property + " does not exist!"
 	}
 
-	static execute(stmt: String, params: any|any[]): Promise<(resolve, reject)=>{}>
+	static execute(stmt: String, params: any|any[]): Promise<any>
 	{
 		/* Make sure that database connection configuration exists */
 		// if Model.config() was not called OR was not provided database connection conf:
@@ -146,7 +146,7 @@ export default class Model
 		});
 	}
 
-    create() : Promise<(resolve, reject)=>{}>
+    create() : Promise<any>
 	{
 		var cols : string[] = [];
 		var vals = {};
@@ -169,7 +169,7 @@ export default class Model
 		return Model.execute(stmt, vals);
 	}
 
-    update() : Promise<(resolve, reject)=>{}>
+    update() : Promise<any>
 	{
 		var cols : string[] = [];
 		var vals = {};
@@ -192,13 +192,13 @@ export default class Model
 	}
 
 
-	deleteById() : Promise<(resolve, reject)=>{}>
+	deleteById() : Promise<any>
 	{
 		var stmt = ['delete from', this.tablename, 'where id = ?'].join(' ');
 		return Model.execute(stmt, this.fValues['id']);
 	}
 
-	deleteManyById(ids: number[]) : Promise<(resolve, reject)=>{}>
+	deleteManyById(ids: number[]) : Promise<any>
 	{
 		if (ids.length > 0) {
 
@@ -226,7 +226,7 @@ export default class Model
 	 * 
 	 * @return promise that resolves to the result of the delete query.
 	 */
-	deleteByField(fieldName: string) : Promise<(resolve, reject)=>{}>
+	deleteByField(fieldName: string) : Promise<any>
 	{
 		var stmt = ['delete from', this.tablename, 'where', fieldName, '= ?'].join(' ');
 		return Model.execute(stmt, this.fValues[fieldName]);
@@ -238,7 +238,7 @@ export default class Model
 	 * 
 	 * @return a promise that resolves to the the object which matches the id of the invoking model. If no record is found, the promise resolves to null. 
 	 */
-	selectById() : Promise<(resolve, reject)=>{}>
+	selectById() : Promise<any>
 	{
 		var stmt = ['select * from', this.tablename, 'where id = ?'].join(' ');
 		stmt = this.addOrderCmd(stmt)
@@ -301,7 +301,7 @@ export default class Model
 	 * 
 	 * @return a promise that resolves to the returned records
 	 */
-	select() : Promise<(resolve, reject)=>{}>
+	select() : Promise<any>
 	{
 		// basic select all statement
 		let stmt = ['select * from', this.tablename].join(' ');

@@ -42,18 +42,27 @@ export default class Model
 		// if Model.config() was not called OR was not provided model conf:
 		if(! Model.modelConf) {
 
+			//logger.logln(`process.env['sypmodel-model-conf-file'] = ${process.env['sypmodel-model-conf-file']}`)
+			
 			// if process environment contains a model file, use that
-			if (process.env.hasOwnProperty('sypmodel-model-conf-file'))
+			if (process.env.hasOwnProperty('sypmodel-model-conf-file')) {
 				Model.modelConf = require( process.env['sypmodel-model-conf-file'] )
-			else
-				throw "Model configurations are not provided."
+			}
+			else {
+				let errMsg = `Model configurations are not provided.`
+				logger.logln(errMsg)
+				throw new Error(errMsg)
+			}
 		}
 
-		if (! Model.modelConf.hasOwnProperty(this.className))
-			throw "Unknown model " + this.className + "!"
+		if (! Model.modelConf.hasOwnProperty(this.className)) {
+			let errMsg = `Unknown model ${this.className}!`
+			logger.logln(errMsg);
+			throw new Error(errMsg)
+		}
 		
 		this.tablename = Model.modelConf[this.className]['tablename']
-		this.fields = Model.modelConf[this.className]['columns']
+		this.fields = Model.modelConf[this.className]['columns'].keys()
 		this.fValues =  {}
 
 		this.whereArr = {}
@@ -77,7 +86,7 @@ export default class Model
 		if (this.fields.indexOf(property) > -1)
 			this.fValues[property] = value;
 		else
-			throw "Property " + property + " does not exist!"
+			throw new Error(`Property ${property} does not exist!`)
 		
 		// allow coalescing
 
@@ -93,7 +102,7 @@ export default class Model
 			if (this.fields.indexOf(p) > -1)
 				this.fValues[p] = properties[p];
 			else
-				throw "Property " + p + " does not exist!"
+				throw new Error(`Property ${p} does not exist!`)
 		}
 
 		// allow coalescing
@@ -105,7 +114,7 @@ export default class Model
 		if (this.fields.indexOf(property) > -1)
 			return this.fValues[property]
 		else
-			throw "Property " + property + " does not exist!"
+			throw new Error(`Property ${property} does not exist!`)
 	}
 
 	static execute(stmt: String, params: any|any[]): Promise<any>
@@ -118,7 +127,7 @@ export default class Model
 			if (process.env.hasOwnProperty('sypmodel-conn-conf-file'))
 				Model.connConf = require( process.env['sypmodel-conn-conf-file'] )
 			else
-				throw "Database connection configurations are not provided."
+				throw new Error(`Database connection configurations are not provided.`)
 		}
 
 		logger.log('Statement executed:')
@@ -162,7 +171,7 @@ export default class Model
 		});
 
 		if ( cols.length === 0 )
-			throw 'no value was assigned to any column';
+			throw new Error(`no value was assigned to any column`);
 
 		var stmt = ['insert into', this.tablename, 'set ?'].join(' ');
 
@@ -185,7 +194,7 @@ export default class Model
 		});
 
 		if ( cols.length === 0 )
-			throw 'no value was assigned to any column';
+			throw new Error(`no value was assigned to any column`);
 
 		var stmt = ['update', this.tablename, 'set ? where id = ?'].join(' ');
 		return Model.execute(stmt, [vals, this.fValues['id']]);
@@ -408,7 +417,7 @@ export default class Model
 				}
 			})
 			.catch ( err => {
-				reject(err);
+				return reject(err);
 			});
 		});
 	}

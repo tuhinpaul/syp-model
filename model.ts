@@ -62,7 +62,7 @@ export default class Model
 		}
 		
 		this.tablename = Model.modelConf[this.className]['tablename']
-		this.fields = Model.modelConf[this.className]['columns'].keys()
+		this.fields = Object.keys( Model.modelConf[this.className]['columns'] )
 		this.fValues =  {}
 
 		this.whereArr = {}

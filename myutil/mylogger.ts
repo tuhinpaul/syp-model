@@ -7,10 +7,17 @@ export default class MyLogger
 		this.isEnabled = enabled;
 	}
 
+	/**
+	 * print a newline
+	 */
 	private newline() {
 		console.log()
 	}
 
+	/**
+	 * Log data
+	 * @param x? data to log. If no argument is given, a newline is logged.
+	 */
 	log(x?) : void {
 		if (! this.isEnabled)
 			return
@@ -22,7 +29,10 @@ export default class MyLogger
 			return console.log(x)
 	}
 
-	// adds an extra newline
+	/**
+	 * Log with an extra newline
+	 * @param x? data to log. If no argument is given, two newlines are logged.
+	 */
 	logln(x?) : void {
 		if (! this.isEnabled)
 			return

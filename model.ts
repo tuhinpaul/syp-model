@@ -110,6 +110,10 @@ export default class Model
 		return this;
 	}
 
+	get(propertyName: string): any {
+		return this.valueOf(propertyName)
+	}
+
 	valueOf(property: string): any {
 		if (this.fields.indexOf(property) > -1)
 			return this.fValues[property]
@@ -117,7 +121,7 @@ export default class Model
 			throw new Error(`Property ${property} does not exist!`)
 	}
 
-	static execute(stmt: String, params: any|any[]): Promise<any>
+	static execute(stmt: string, params: any|any[]): Promise<any>
 	{
 		/* Make sure that database connection configuration exists */
 		// if Model.config() was not called OR was not provided database connection conf:
@@ -428,7 +432,7 @@ export default class Model
 	 * 
 	 * @param modelNameOrInstance can be either a model name or model instance. If it's a model name, an instance is created using Model.factory()
 	 * @param indexBy how to index the objects in the returned list of objects
-	 * @param isArrayMember is an index can be associated with multiple objects
+	 * @param isArrayMember whether or not an index can be associated with multiple objects
 	 */
 	public static promiseGetAll(modelNameOrInstance: String|Model, indexBy: string = 'id', isArrayMember:boolean = false) {
 

@@ -1,21 +1,18 @@
 export default class MyLogger
 {
-	/* you may enable/disable logging */
+	/** enable/disable logging */
 	isEnabled = null;
 
 	constructor(enabled = true) {
 		this.isEnabled = enabled;
 	}
 
-	/**
-	 * print a newline
-	 */
+	/** print a newline */
 	private newline() {
 		console.log()
 	}
 
-	/**
-	 * Log data
+	/** Log data
 	 * @param x? data to log. If no argument is given, a newline is logged.
 	 */
 	log(x?) : void {
@@ -29,8 +26,7 @@ export default class MyLogger
 			return console.log(x)
 	}
 
-	/**
-	 * Log with an extra newline
+	/** Log with an extra newline at the end
 	 * @param x? data to log. If no argument is given, two newlines are logged.
 	 */
 	logln(x?) : void {
